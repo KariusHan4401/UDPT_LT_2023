@@ -7,7 +7,7 @@ export default function RegularRoute() {
   return (
     <Routes>
       <Route path="" element={<Home />} />
-      <Route path="/complete-order/:TotalMoney" element={<CompleteOrder />} />
+      <Route path="/complete-order" element={<CompleteOrder />} />
     </Routes>
   )
 }
