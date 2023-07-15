@@ -21,7 +21,9 @@ import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { dataInfos } from 'const/dataInfos'
-// import Paypal from 'src/image/checkout/paypal.png'
+import { CardMedia } from '@mui/material'
+// import { pay } from 'api/Order'
+// import Paypal from 'image/checkout/paypal.png'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -59,6 +61,7 @@ interface Row {
   qty: number
   unit: number
   price: number
+  imgURL: any
 }
 
 function subtotal(items: readonly Row[]) {
@@ -71,6 +74,7 @@ const Home = () => {
   const [invoiceSubtotal, setInvoiceSubtotal] = useState<number>(0)
   const [invoiceTaxes, setInvoiceTaxes] = useState<number>(0)
   const [invoiceTotal, setInvoiceTotal] = useState<number>(0)
+  // const [payLink, setPayLink] = useState<string>('')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectPay(Number((event.target as HTMLInputElement).value))
@@ -86,6 +90,15 @@ const Home = () => {
     setInvoiceTotal(invoiceTotalTemp)
   }, [data])
 
+  const payment = async () => {
+    try {
+      // const res = await pay(data)
+      // setPayLink(res.PayLink)
+    } catch (error) {
+      // console.log(error)
+    }
+  }
+
   return (
     <Container fixed sx={{ marginTop: '50px' }} maxWidth="xl">
       <Box sx={{ flexGrow: 1 }}>
@@ -96,10 +109,13 @@ const Home = () => {
                 <TableHead>
                   <StyledTableRow>
                     <StyledTableCell align="center" sx={{ fontWeight: 'Bold' }}>
+                      Image
+                    </StyledTableCell>
+                    <StyledTableCell align="center" sx={{ fontWeight: 'Bold' }}>
                       Description
                     </StyledTableCell>
                     <StyledTableCell align="center" sx={{ fontWeight: 'Bold' }}>
-                      Qty.
+                      Quantity
                     </StyledTableCell>
                     <StyledTableCell align="center" sx={{ fontWeight: 'Bold' }}>
                       Unit
@@ -112,6 +128,9 @@ const Home = () => {
                 <TableBody>
                   {data.map((item) => (
                     <StyledTableRow key={item.id}>
+                      <StyledTableCell>
+                        <CardMedia component="img" height="100" image={item.imgURL} alt={item.desc} />
+                      </StyledTableCell>
                       <StyledTableCell>{item.desc}</StyledTableCell>
                       <StyledTableCell align="center">
                         <TextField
@@ -142,6 +161,7 @@ const Home = () => {
                     </StyledTableRow>
                   ))}
                   <StyledTableRow>
+                    <StyledTableCell rowSpan={3} />
                     <StyledTableCell rowSpan={3} />
                     <StyledTableCell colSpan={2}>Subtotal</StyledTableCell>
                     <StyledTableCell align="center">{ccyFormat(invoiceSubtotal)}</StyledTableCell>
@@ -194,6 +214,9 @@ const Home = () => {
               variant="contained"
               disableElevation
               sx={{ minWidth: '100%', marginTop: '10px', fontWeight: 'Bold' }}
+              onClick={() => {
+                payment()
+              }}
             >
               Pay
             </Button>

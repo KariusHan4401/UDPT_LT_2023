@@ -1,20 +1,18 @@
 import React from 'react'
 import Button from '@mui/material/Button'
-import DeleteIcon from '@mui/icons-material/Delete'
-import SendIcon from '@mui/icons-material/Send'
 import Stack from '@mui/material/Stack'
 import { Container } from '@mui/material'
 
 import CheckCircleOutlineSharpIcon from '@mui/icons-material/CheckCircleOutlineSharp'
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
+// import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
 
 const CompleteOrder = () => {
-  const params = new URLSearchParams(window.location.search)
-  const extraData = params.get('extraData')
-  //const message = params.get('message')
-  //const decodedString = atob(extraData);
-  const [linkPay, setLinkPay] = React.useState('')
-  const message = 'Thành công'
+  // const params = new URLSearchParams(window.location.search)
+  // const extraData = params.get('extraData')
+  // const message = params.get('message')
+  // const decodedString = atob(extraData);
+  // const [linkPay, setLinkPay] = React.useState('')
+  // const message = 'Thành công'
 
   return (
     <Container fixed sx={{ marginTop: '200px' }} maxWidth="xl">
