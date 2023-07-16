@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+// import { useHistory } from 'react-router-dom'
 
 import Container from '@mui/material/Container'
 import Table from '@mui/material/Table'
@@ -22,8 +23,11 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { dataInfos } from 'const/dataInfos'
 import { CardMedia } from '@mui/material'
-// import { pay } from 'api/Order'
-// import Paypal from 'image/checkout/paypal.png'
+import { pay } from 'api/Order'
+import { message } from 'antd'
+// import Paypal from 'image/checkout/paypal.png', test
+
+// import { useNavigate } from 'react-router-dom'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -64,6 +68,13 @@ interface Row {
   imgURL: any
 }
 
+interface PaymentInfo {
+  MoneyTotal: number
+  SubTotal: number
+  Taxes: number
+  PaymentMethod: string
+}
+
 function subtotal(items: readonly Row[]) {
   return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0)
 }
@@ -74,7 +85,12 @@ const Home = () => {
   const [invoiceSubtotal, setInvoiceSubtotal] = useState<number>(0)
   const [invoiceTaxes, setInvoiceTaxes] = useState<number>(0)
   const [invoiceTotal, setInvoiceTotal] = useState<number>(0)
-  // const [payLink, setPayLink] = useState<string>('')
+  const [PaymentData, setPaymentData] = useState<PaymentInfo>({
+    MoneyTotal: 0,
+    SubTotal: 0,
+    Taxes: 0,
+    PaymentMethod: '',
+  })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectPay(Number((event.target as HTMLInputElement).value))
@@ -88,14 +104,33 @@ const Home = () => {
     setInvoiceSubtotal(invoiceSubtotalTemp)
     setInvoiceTaxes(invoiceTaxesTemp)
     setInvoiceTotal(invoiceTotalTemp)
+
+    const Payment: PaymentInfo = {
+      MoneyTotal: invoiceTotalTemp,
+      SubTotal: invoiceSubtotalTemp,
+      Taxes: invoiceTaxesTemp,
+      PaymentMethod: '',
+    }
+
+    setPaymentData(Payment)
   }, [data])
 
   const payment = async () => {
+    if (selectPay === 0) {
+      PaymentData.PaymentMethod = 'PAYPAL'
+      setPaymentData(PaymentData)
+    }
+    console.log(PaymentData)
     try {
-      // const res = await pay(data)
-      // setPayLink(res.PayLink)
+      const res = await pay(PaymentData)
+      if (res?.data?.exitcode === 1) {
+        message.success('Create order successfully!')
+        window.location.href = res?.data?.paymentUrl
+      } else {
+        message.error('Fail to create order!')
+      }
     } catch (error) {
-      // console.log(error)
+      message.error('Fail to create order!')
     }
   }
 
